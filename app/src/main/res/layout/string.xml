@@ -1,0 +1,13 @@
+<resources xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="WrongFolder">
+    <string android:name="app_name"
+        tools:ignore="ExtraText">dropDownMenuExample</string>
+    <string-array android:name="languages">
+        <item>C</item>
+        <item>C++</item>
+        <item>Java</item>
+        <item>JavaScript</item>
+        <item>VisualBasic</item>
+    </string-array>
+</resources>
