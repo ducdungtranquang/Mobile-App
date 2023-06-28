@@ -32,6 +32,10 @@ import okhttp3.Response;
 
 public class StudentList extends AppCompatActivity {
 
+    public void deleteStudent(int _id) {
+
+    }
+
     public void updateStudent(String gradeS, String tvLoginName, String tvAge, String tvClassName, String idS) {
         OkHttpClient client = new OkHttpClient();
 
@@ -133,7 +137,7 @@ public class StudentList extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                // Lấy thông tin JSON trả về. Bạn có thể log lại biến json này để xem nó như thế nào.
+                // Lấy thông tin JSON trả về.
                 String json = response.body().string();
                 final List<Student> students = jsonAdapter.fromJson(json);
 
@@ -147,12 +151,54 @@ public class StudentList extends AppCompatActivity {
                         adapter.setEditButtonClickListener(new StudentAdapter.EditButtonClickListener() {
                             @Override
                             public void onEditButtonClick(String gradeS, String tvLoginName, String tvAge, String tvClassName, String idS) {
-                                updateStudent(gradeS,tvLoginName, tvAge, tvClassName, idS);
+                                updateStudent(gradeS, tvLoginName, tvAge, tvClassName, idS);
                             }
+                        });
+
+                        adapter.setDeleteListener(new StudentAdapter.DeleteListenerClick() {
+                            @Override
+                            public void onDeleteClick(int position) {
+                                Student student = students.get(position);
+                                String id = student._id;
+
+                                OkHttpClient client = new OkHttpClient();
+                                Request request = new Request.Builder()
+                                        .url("https://nice-teal-lobster-tam.cyclic.app/api/students/" + id)
+                                        .delete()
+                                        .build();
+
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(Call call, IOException e) {
+                                        // Xử lý khi có lỗi xảy ra
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onResponse(Call call, Response response) throws IOException {
+                                        if (response.isSuccessful()) {
+                                            students.remove(position);
+                                            runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Intent intent = new Intent(StudentList.this, Home.class);
+                                                    startActivity(intent);
+                                                    Toast.makeText(StudentList.this, "Delete successfully", Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+                                        } else {
+
+                                        }
+                                    }
+                                });
+                            }
+
                         });
                         rvStudent.setAdapter(adapter);
                     }
                 });
-            }});
+
+            }
+        });
     }
 }

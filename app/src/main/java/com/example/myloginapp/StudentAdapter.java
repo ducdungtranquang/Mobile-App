@@ -19,6 +19,8 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentI
     private Context context;
     private EditButtonClickListener editButtonClickListener;
 
+    private DeleteListenerClick deleteListener;
+
     public StudentAdapter(List<Student> students, Context c) {
         this.students = students;
         this.context = c;
@@ -44,6 +46,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentI
     public void setEditButtonClickListener(EditButtonClickListener listener) {
         this.editButtonClickListener = listener;
     }
+
+    public interface DeleteListenerClick{
+        void onDeleteClick(int position);
+    }
+
+    public void setDeleteListener(DeleteListenerClick listener) {
+        this.deleteListener = listener;
+    }
+
 
     @Override
     public void onBindViewHolder(StudentItemViewHolder holder, int position) {
@@ -76,6 +87,16 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.StudentI
                 }
             }
         });
+
+        holder.delBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (deleteListener != null) {
+                    deleteListener.onDeleteClick(position);
+                }
+            }
+        });
+
     }
 
     public static class StudentItemViewHolder extends RecyclerView.ViewHolder {

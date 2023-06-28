@@ -32,7 +32,6 @@ public class StudentPerClass extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_per_class);
         String classId = getIntent().getStringExtra("classId");
-        // Hiển thị ID hoặc thực hiện các hành động khác tùy theo nhu cầu
         Toast.makeText(this, "Class ID: " + classId, Toast.LENGTH_SHORT).show();
 
         TextView backBtn = findViewById(R.id.back);
@@ -50,7 +49,7 @@ public class StudentPerClass extends AppCompatActivity {
         // Khởi tạo OkHttpClient để lấy dữ liệu.
         OkHttpClient client = new OkHttpClient();
 
-        // Khởi tạo Moshi adapter để biến đổi json sang model java (ở đây là Students)
+        // Khởi tạo Moshi adapter để biến đổi json sang model java
         Moshi moshi = new Moshi.Builder().build();
         Type studentType = Types.newParameterizedType(List.class, Student.class);
         final JsonAdapter<List<Student>> jsonAdapter = moshi.adapter(studentType);
@@ -70,7 +69,6 @@ public class StudentPerClass extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
 
-                // Lấy thông tin JSON trả về. Bạn có thể log lại biến json này để xem nó như thế nào.
                 String json = response.body().string();
                 final List<Student> students = jsonAdapter.fromJson(json);
 
